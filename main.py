@@ -45,10 +45,10 @@ def fluxus():
         final_response = requests.get(final_url)
         final_response.raise_for_status()
         final_data = final_response.json()
-        key = final_data.get{"result")
+        key = final_data.get('result')  # Fixed syntax error
         # Remove the "selling" key from the data if present
         final_data.pop('selling', None)
-        return jsonify({"key" : key})
+        return jsonify({"key": key})
     except requests.HTTPError as http_err:
         logger.error(f"HTTP error occurred while accessing {final_url}: {http_err}")
         return jsonify({'error': 'HTTP error occurred'}), 500
@@ -58,6 +58,7 @@ def fluxus():
     except Exception as e:
         logger.error(f"Unexpected error while accessing {final_url}: {e}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
