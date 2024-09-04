@@ -58,3 +58,9 @@ def fluxus():
     except Exception as e:
         logger.error(f"Unexpected error while accessing {final_url}: {e}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
+if __name__ == '__main__':
+    app.run(
+        host='0.0.0.0',
+        port=port,
+        debug=False  # Ensure debug=False in production
+    )
