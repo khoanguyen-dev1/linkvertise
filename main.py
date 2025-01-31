@@ -1,9 +1,11 @@
 import logging
 from flask import Flask, request, jsonify, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_cors import CORS
 import os
 import requests
 
+CORS(app)
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 port = int(os.getenv('PORT', 8080))
@@ -40,7 +42,7 @@ def fluxus():
         return jsonify({'error': 'Link is required'}), 400
 
     try:
-        final_url = f'https://api.bypass.vip/bypass?url={link}'
+        final_url = f'https://api-bypass.robloxexecutorth.workers.dev/fluxus?url={link}'
         logger.info(f"Requesting final URL: {final_url}")
         final_response = requests.get(final_url)
         final_response.raise_for_status()
