@@ -2,7 +2,6 @@ import logging
 from flask import Flask, request, jsonify, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_cors import CORS
-from bs4 import BeautifulSoup
 import os
 import requests
 
@@ -60,39 +59,6 @@ def fluxus():
     except Exception as e:
         logger.error(f"Unexpected error while accessing {final_url}: {e}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
-@app.route('/socialwolvez', methods=['GET'])
-def socialwolvez():
-    url = request.args.get('url')
-    
-    if not url:
-        return jsonify({'error': 'Missing parameter: url'}), 400
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        script_tag = soup.find('script', {'id': '__NUXT_DATA__'})
-        if script_tag and script_tag.string:
-            try:
-                data = json.loads(script_tag.string)
-                
-                extracted_url = data[5]
-                extracted_name = data[6]
-
-                if extracted_url and extracted_name:
-                    return jsonify({'result': extracted_url, 'name': extracted_name})
-                else:
-                    return jsonify({'error': 'Required data not found in the JSON structure.'}), 500
-
-            except (json.JSONDecodeError, KeyError, IndexError) as e:
-                return jsonify({'error': 'Failed to parse JSON data.', 'details': str(e)}), 500
-        else:
-            return jsonify({'error': 'Script tag with JSON data not found.'}), 404
-
-    except requests.RequestException as e:
-        return jsonify({'error': 'Failed to make request to the provided URL.', 'details': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(
