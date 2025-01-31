@@ -48,8 +48,8 @@ def fluxus():
         final_response = requests.get(final_url)
         final_response.raise_for_status()
         final_data = final_response.json()
-        key = final_data.get('result')  
-        return jsonify({"key": key})
+        key = final_data.get('key')  
+        return jsonify({"result": key})
     except requests.HTTPError as http_err:
         logger.error(f"HTTP error occurred while accessing {final_url}: {http_err}")
         return jsonify({'error': 'HTTP error occurred'}), 500
