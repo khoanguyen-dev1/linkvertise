@@ -5,8 +5,8 @@ from flask_cors import CORS
 import os
 import requests
 
-CORS(app)
 app = Flask(__name__)
+CORS(app)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 port = int(os.getenv('PORT', 8080))
 
@@ -48,8 +48,7 @@ def fluxus():
         final_response.raise_for_status()
         final_data = final_response.json()
         key = final_data.get('result')  # Fixed syntax error
-        # Remove the "selling" key from the data if present
-        final_data.pop('selling', None)
+        final_data.pop('selling', None)  # Remove the "selling" key from the data if present
         return jsonify({"key": key})
     except requests.HTTPError as http_err:
         logger.error(f"HTTP error occurred while accessing {final_url}: {http_err}")
