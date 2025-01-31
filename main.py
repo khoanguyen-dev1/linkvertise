@@ -32,9 +32,9 @@ def get_client_ip():
 def index():
     return render_template('index.html')
 
-@app.route('/link', methods=['GET'])
+@app.route('/fluxus', methods=['GET'])
 def fluxus():
-    link = request.args.get('url')
+    link = request.args.get('link')
     client_ip = get_client_ip()
     logger.info(f"Request from IP: {client_ip}")
 
@@ -43,13 +43,13 @@ def fluxus():
 
     try:
         final_url = f'https://api-bypass.robloxexecutorth.workers.dev/fluxus?url={link}'
-        console.log("Requesting final URL: {final_url}")
         logger.info(f"Requesting final URL: {final_url}")
         final_response = requests.get(final_url)
         final_response.raise_for_status()
         final_data = final_response.json()
         key = final_data.get('key')  
-        return jsonify({"result": key})
+        final_data.pop('selling', None)  
+        return jsonify({"key": key})
     except requests.HTTPError as http_err:
         logger.error(f"HTTP error occurred while accessing {final_url}: {http_err}")
         return jsonify({'error': 'HTTP error occurred'}), 500
